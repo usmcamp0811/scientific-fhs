@@ -4,6 +4,7 @@
 , juliaVersion ? "1.10.0"
 , enableConda ? false
 , enablePython ? true
+, enablePoetry ? true
 , enableQuarto ? true
 , condaInstallationPath ? "~/.conda"
 , condaJlEnv ? "conda_jl"
@@ -134,8 +135,9 @@ let
   pythonPackages = pkgs:
     with pkgs;
     [
+      poetry
       (python3.withPackages (ps: with ps; [
-        poetry-core mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
+        mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
       ]))
     ];
 
@@ -146,6 +148,7 @@ let
     ++ optionals enableQuarto (quartoPackages pkgs)
     ++ optionals enableConda (condaPackages pkgs)
     ++ optionals enableNVIDIA (nvidiaPackages pkgs)
+    ++ optionals enablePoetry [(pkgs.callPackage ./poetry.nix)]
     ++ optionals enablePython (pythonPackages pkgs);
 
   std_envvars = ''
@@ -177,7 +180,7 @@ let
 
   envvars = std_envvars + optionalString enableGraphical graphical_envvars
     + optionalString enableConda conda_envvars
-    + optionalString (enableConda && enableJulia) conda_julia_envvars
+    + optionalString (enableConda && enableJulia && enablePoetry ) conda_julia_envvars
     + optionalString enableNVIDIA nvidia_envvars;
 
   multiPkgs = pkgs: with pkgs; [ zlib ];

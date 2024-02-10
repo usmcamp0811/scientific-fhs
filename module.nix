@@ -56,7 +56,7 @@ in
           quarto = if version-spec.default then [ (fhsCommand "quarto" "quarto") ] else [];
         in
           [ (fhsCommand name "julia") (fhsCommand "${name}-bash" "bash") ]
-        ++ python ++ quarto)
+        ++ python ++ quarto )
       cfg.juliaVersions;
   };
 }
