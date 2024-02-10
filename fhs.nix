@@ -148,7 +148,7 @@ let
     ++ optionals enableQuarto (quartoPackages pkgs)
     ++ optionals enableConda (condaPackages pkgs)
     ++ optionals enableNVIDIA (nvidiaPackages pkgs)
-    ++ optionals enablePoetry [(pkgs.callPackage ./poetry.nix)]
+    # ++ optionals enablePoetry [(pkgs.callPackage ./poetry.nix)]
     ++ optionals enablePython (pythonPackages pkgs);
 
   std_envvars = ''
