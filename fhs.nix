@@ -43,6 +43,7 @@ let
       texliveScheme
       ncurses
       poetry
+      pyenv
     ] ++ lib.optional enableNode pkgs.nodejs;
 
   graphicalPackages = pkgs:
