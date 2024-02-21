@@ -10,5 +10,10 @@
         enableGraphical = true;
         juliaVersion = "1.10.0";
       };
+      packages.x86_64-darwin.scientific-fhs = pkgs.callPackage ./fhs.nix {
+        enableNVIDIA = false;
+        enableGraphical = true;
+        juliaVersion = "1.10.0";
+      };
     };
 }
