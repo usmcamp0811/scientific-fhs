@@ -21,7 +21,7 @@
       nixosModules.default = import ./module.nix;
 
       packages.x86_64-linux.scientific-fhs = linuxPkgs.callPackage ./fhs.nix {
-        enableNVIDIA = false;
+        enableNVIDIA = true;
         enableGraphical = true;
         juliaVersion = "1.10.0";
       };
