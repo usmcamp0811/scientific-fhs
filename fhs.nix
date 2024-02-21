@@ -45,7 +45,6 @@ let
       poetry
       pyenv
       libffi
-      mlflow
     ] ++ lib.optional enableNode pkgs.nodejs;
 
   graphicalPackages = pkgs:
@@ -137,7 +136,7 @@ let
     with pkgs;
     [
       (python3.withPackages (ps: with ps; [
-        jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
+        mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
       ]))
     ];
 
