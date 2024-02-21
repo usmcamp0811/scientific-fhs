@@ -45,6 +45,7 @@ let
       poetry
       pyenv
       libffi
+      mlflow
     ] ++ lib.optional enableNode pkgs.nodejs;
 
   graphicalPackages = pkgs:
