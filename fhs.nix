@@ -44,6 +44,7 @@ let
       ncurses
       poetry
       pyenv
+      libffi
     ] ++ lib.optional enableNode pkgs.nodejs;
 
   graphicalPackages = pkgs:
