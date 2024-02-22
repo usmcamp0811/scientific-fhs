@@ -12,6 +12,7 @@
           inherit system;
           config = {
             allowUnfree = true;
+            allowUnsupportedSystem = true;
             # Any other global configurations you'd like to include.
           };
         };
