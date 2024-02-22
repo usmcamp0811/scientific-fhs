@@ -1,9 +1,9 @@
-{ lib
-, pkgs
-, enableJulia ? true
+{ 
+pkgs,
+  enableJulia ? true
 , juliaVersion ? "1.10.0"
 , enableConda ? false
-, enablePython ? false
+, enablePython ? true
 , enableQuarto ? true
 , condaInstallationPath ? "~/.conda"
 , condaJlEnv ? "conda_jl"
@@ -15,9 +15,10 @@
 , commandScript ? "bash"
 , texliveScheme ? pkgs.texlive.combined.scheme-minimal
 , extraOutputsToInstall ? ["man" "dev"]
+, ...
 }:
 
-with lib;
+with pkgs.lib;
 let
   standardPackages = pkgs:
     with pkgs;
@@ -116,7 +117,7 @@ let
   nvidiaPackages = pkgs:
     with pkgs; [
       cudatoolkit_11
-      cudnn_cudatoolkit_11
+      cudaPackages.cudnn
       linuxPackages.nvidia_x11
     ];
 
@@ -172,7 +173,7 @@ let
 
   nvidia_envvars = ''
     export CUDA_PATH=${pkgs.cudatoolkit_11}
-    export LD_LIBRARY_PATH=${pkgs.cudatoolkit_11}/lib:${pkgs.cudnn_cudatoolkit_11}/lib:${pkgs.cudatoolkit_11.lib}/lib:${pkgs.zlib}/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=${pkgs.cudatoolkit_11}/lib:${pkgs.cudaPackages.cudnn}/lib:${pkgs.cudatoolkit_11.lib}/lib:${pkgs.zlib}/lib:$LD_LIBRARY_PATH
     export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
   '';
 

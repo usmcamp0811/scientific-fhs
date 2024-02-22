@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -18,10 +18,10 @@
       {
         packages = {
           scientific-fhs = pkgs.callPackage ./fhs.nix {
-            pkgs = pkgs;
-            # enableNVIDIA = true;
-            # enableGraphical = true;
-            # juliaVersion = "1.10.0";
+            inherit (pkgs) stdenv mkShell;
+            enableNVIDIA = true;
+            enableGraphical = true;
+            juliaVersion = "1.10.0";
           };
         };
 

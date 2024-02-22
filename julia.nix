@@ -1,6 +1,7 @@
-{ stdenv, lib, fetchurl, zlib, glib, xorg, dbus, fontconfig, freetype, libGL, Cocoa, CoreServices, juliaVersion }:
+{ stdenv, lib, fetchurl, zlib, glib, xorg, dbus, fontconfig, freetype, libGL, juliaVersion }:
 
 let
+
   versionShasLinux = {
     "1.10.0" = "sha256-pymCB/cvKyeyqxzjkqbqN6+9H77g8fjRkLBU3KuoeP4=";
     "1.10.0-beta2" = "sha256-8aF/WlKYDBZ0Fsvk7aFEGdgY87dphUARVKOlZ4edZHc=";
@@ -31,29 +32,21 @@ let
       sha256 = platformShas.${version};
     };
   in makeJulia version src;
-
   makeJulia = version: src:
     stdenv.mkDerivation {
       name = "julia-${version}";
       src = src;
-      installPhase = if stdenv.hostPlatform.isDarwin
-        then ''
-          # macOS specific installation commands
-          hdiutil attach ${src}
-          cp -R /Volumes/Julia-${version}/Julia-${lib.versions.majorMinor version}.app/Contents/Resources/julia $out
-          hdiutil detach /Volumes/Julia-${version}/
-        '' else ''
-          # Linux specific installation commands
-          mkdir $out
-          cp -R * $out/
+      installPhase = ''
+        mkdir $out
+        cp -R * $out/
 
-          # Patch for https://github.com/JuliaInterop/RCall.jl/issues/339.
-          echo "patching $out"
-          cp -L ${stdenv.cc.cc.lib}/lib/libstdc++.so.6 $out/lib/julia/
-        '';
+        # Patch for https://github.com/JuliaInterop/RCall.jl/issues/339.
+
+        echo "patching $out"
+        cp -L ${stdenv.cc.cc.lib}/lib/libstdc++.so.6 $out/lib/julia/
+      '';
       dontStrip = true;
-      buildInputs = if stdenv.hostPlatform.isDarwin then [ Cocoa CoreServices ] else [];
-      ldLibraryPath = if stdenv.hostPlatform.isDarwin then "" else lib.makeLibraryPath [
+      ldLibraryPath = lib.makeLibraryPath [
         stdenv.cc.cc
         zlib
         glib
