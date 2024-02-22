@@ -4,7 +4,7 @@ pkgs,
 , juliaVersion ? "1.10.0"
 , enableConda ? false
 , enablePython ? true
-, enableQuarto ? true
+, enableQuarto ? false
 , condaInstallationPath ? "~/.conda"
 , condaJlEnv ? "conda_jl"
 , pythonVersion ? "3.8"
@@ -12,7 +12,7 @@ pkgs,
 , enableNVIDIA ? false
 , enableNode ? false
 , commandName ? "scientific-fhs"
-, commandScript ? "bash"
+, commandScript ? "zsh"
 , texliveScheme ? pkgs.texlive.combined.scheme-minimal
 , extraOutputsToInstall ? ["man" "dev"]
 , ...
