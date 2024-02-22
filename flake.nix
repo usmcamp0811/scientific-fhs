@@ -7,6 +7,7 @@
   outputs = { self, nixpkgs, flake-utils, ... } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        isDarwin = system == "x86_64-darwin" || system == "aarch64-darwin";
         pkgs = import nixpkgs {
           inherit system;
           config = {
@@ -19,7 +20,7 @@
         packages = {
           scientific-fhs = pkgs.callPackage ./fhs.nix {
             inherit (pkgs) stdenv mkShell;
-            enableNVIDIA = true;
+            enableNVIDIA = !isDarwin;
             enableGraphical = true;
             juliaVersion = "1.10.0";
           };
