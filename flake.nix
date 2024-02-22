@@ -22,6 +22,7 @@
             inherit (pkgs) stdenv mkShell;
             enableNVIDIA = !isDarwin;
             enableGraphical = true;
+            enableQuarto = !isDarwin;
             juliaVersion = "1.10.0";
           };
         };
