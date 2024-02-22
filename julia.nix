@@ -15,7 +15,7 @@ let
   };
   versionShasMac = {
     # Add your macOS SHAs here
-    "1.10.0" = "sha256-3EygGxKUwC1Hsz7ybUidwoisaGVaA3dIcMaHK4Kpp9Y=";
+    "1.10.0" = "sha256-6xzfLTc+5AQS6PXua0aBkW8erW15SIOQNhnHvxR9T0Y=";
   };
   platformShas = if stdenv.hostPlatform.isDarwin then versionShasMac else versionShasLinux;
 
