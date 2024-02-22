@@ -16,13 +16,14 @@ let
     # Add your macOS SHAs here
     "1.10.0" = "sha256-03p7cjbc1ahj71g39y2ysjippppshx6cnjsh9lsnbdfy8mcjwypw";
   };
-  platformShas = stdenv.hostPlatform.isDarwin ? versionShasMac : versionShasLinux;
+  platformShas = if stdenv.hostPlatform.isDarwin then versionShasMac else versionShasLinux;
+
 
   makeStdJulia = version: let
     baseurlLinux = "https://julialang-s3.julialang.org/bin/linux/x64/${lib.versions.majorMinor version}";
     baseurlMac = "https://julialang-s3.julialang.org/bin/mac/aarch64/${lib.versions.majorMinor version}";
-    baseurl = stdenv.hostPlatform.isDarwin ? baseurlMac : baseurlLinux;
-    architectureSuffix = stdenv.hostPlatform.isDarwin ? "macaarch64" : "linux-x86_64";
+    baseurl = if stdenv.hostPlatform.isDarwin then baseurlMac else baseurlLinux;
+    architectureSuffix = if stdenv.hostPlatform.isDarwin then "macaarch64" else "linux-x86_64";
     filename = "julia-${version}-${architectureSuffix}.tar.gz";
     url = "${baseurl}/julia-${version}-${architectureSuffix}.tar.gz";
     src = fetchurl {
@@ -35,13 +36,13 @@ let
     stdenv.mkDerivation {
       name = "julia-${version}";
       src = src;
-      installPhase = stdenv.hostPlatform.isDarwin
-        ? ''
+      installPhase = if stdenv.hostPlatform.isDarwin
+        then ''
           # macOS specific installation commands
           hdiutil attach ${src}
           cp -R /Volumes/Julia-${version}/Julia-${lib.versions.majorMinor version}.app/Contents/Resources/julia $out
           hdiutil detach /Volumes/Julia-${version}/
-        '' : ''
+        '' else ''
           # Linux specific installation commands
           mkdir $out
           cp -R * $out/
@@ -51,8 +52,8 @@ let
           cp -L ${stdenv.cc.cc.lib}/lib/libstdc++.so.6 $out/lib/julia/
         '';
       dontStrip = true;
-      buildInputs = stdenv.hostPlatform.isDarwin ? [ Cocoa CoreServices ] : [];
-      ldLibraryPath = stdenv.hostPlatform.isDarwin ? "" : lib.makeLibraryPath [
+      buildInputs = if stdenv.hostPlatform.isDarwin then [ Cocoa CoreServices ] else [];
+      ldLibraryPath = if stdenv.hostPlatform.isDarwin then "" else lib.makeLibraryPath [
         stdenv.cc.cc
         zlib
         glib

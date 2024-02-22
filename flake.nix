@@ -19,9 +19,9 @@
         packages = {
           scientific-fhs = pkgs.callPackage ./fhs.nix {
             pkgs = pkgs;
-            enableNVIDIA = true;
-            enableGraphical = true;
-            juliaVersion = "1.10.0";
+            # enableNVIDIA = true;
+            # enableGraphical = true;
+            # juliaVersion = "1.10.0";
           };
         };
 
