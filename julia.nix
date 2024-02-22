@@ -24,7 +24,7 @@ let
     baseurlLinux = "https://julialang-s3.julialang.org/bin/linux/x64/${lib.versions.majorMinor version}";
     baseurlMac = "https://julialang-s3.julialang.org/bin/mac/x64/${lib.versions.majorMinor version}";
     baseurl = if stdenv.hostPlatform.isDarwin then baseurlMac else baseurlLinux;
-    architectureSuffix = if stdenv.hostPlatform.isDarwin then "macaarch64" else "linux-x86_64";
+    architectureSuffix = if stdenv.hostPlatform.isDarwin then "mac-x86_64" else "linux-x86_64";
     filename = "julia-${version}-${architectureSuffix}.tar.gz";
     url = "${baseurl}/julia-${version}-${architectureSuffix}.tar.gz";
     src = fetchurl {
