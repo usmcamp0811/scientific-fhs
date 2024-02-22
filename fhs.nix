@@ -15,6 +15,7 @@ pkgs,
 , commandScript ? "zsh"
 , texliveScheme ? pkgs.texlive.combined.scheme-minimal
 , extraOutputsToInstall ? ["man" "dev"]
+, poetryEnv ? null
 , ...
 }:
 
@@ -136,9 +137,10 @@ let
   pythonPackages = pkgs:
     with pkgs;
     [
-      (python3.withPackages (ps: with ps; [
-        mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
-      ]))
+      # (python3.withPackages (ps: with ps; [
+      #   mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
+      # ]))
+      poetryEnv
     ];
 
   targetPkgs = pkgs:

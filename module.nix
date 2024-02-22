@@ -58,6 +58,5 @@ in
         in
           [ (fhsCommand name "julia") (fhsCommand "${name}-bash" "bash") ]
         ++ python ++ quarto)
-      cfg.juliaVersions;
-  };
+      cfg.juliaVersions; };
 }
