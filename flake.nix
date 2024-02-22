@@ -21,7 +21,7 @@
           scientific-fhs = pkgs.callPackage ./fhs.nix {
             inherit (pkgs) stdenv mkShell;
             enableNVIDIA = !isDarwin;
-            enableGraphical = true;
+            enableGraphical = !isDarwin;
             enableQuarto = !isDarwin;
             juliaVersion = "1.10.0";
           };
