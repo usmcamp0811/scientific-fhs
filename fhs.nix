@@ -137,9 +137,6 @@ let
   pythonPackages = pkgs:
     with pkgs;
     [
-      # (python3.withPackages (ps: with ps; [
-      #   mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
-      # ]))
       poetryEnv
     ];
 

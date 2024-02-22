@@ -8,6 +8,7 @@
   outputs = { self, poetry2nix, nixpkgs, flake-utils, ... } @ inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        # NOTE: Darwin is still busted
         isDarwin = system == "x86_64-darwin" || system == "aarch64-darwin";
         pkgs = import nixpkgs {
           inherit system;
@@ -33,8 +34,6 @@
           pandas = [ "versioneer" ];
           sphinxcontrib-jquery = [ "sphinx" "setuptools" ];
           gunicorn = ["setuptools-scm"];
-          # contourpy = [ "mesonpy" ];
-          # numpy = [ "setuptools" ];
         };
 
         p2n-overrides = pkgs.poetry2nix.defaultPoetryOverrides.extend (self: super:
