@@ -16,6 +16,7 @@
 , commandScript ? "zsh"
 , texliveScheme ? pkgs.texlive.combined.scheme-minimal
 , extraOutputsToInstall ? ["man" "dev"]
+, poetryEnv ? null
 }:
 
 with lib;
@@ -132,14 +133,13 @@ let
     with pkgs;
     [ (callPackage ./conda.nix { installationPath = condaInstallationPath; }) ];
 
-  pythonPackages = pkgs:
-    with pkgs;
-    [
-      poetry
-      (python3.withPackages (ps: with ps; [
-        mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments
-      ]))
-    ];
+  pythonPackages = pkgs: with pkgs; [
+    (if poetryEnv == null then 
+      python3.withPackages (ps: with ps; [ mlflow jupyter jupyterlab numpy scipy pandas matplotlib scikit-learn tox pygments ]) 
+    else 
+      poetryEnv)
+  ];
+
 
   targetPkgs = pkgs:
     (standardPackages pkgs)
