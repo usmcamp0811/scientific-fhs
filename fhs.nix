@@ -46,6 +46,7 @@ let
       ncurses
       bubblewrap
       poetry
+      pyenv
     ] ++ lib.optional enableNode pkgs.nodejs;
 
   graphicalPackages = pkgs:
@@ -140,6 +141,9 @@ let
       poetryEnv)
   ];
 
+  pythonPackages = pkgs: with pkgs; [
+    (if pyenv == true then pyenv)
+  ];
 
   targetPkgs = pkgs:
     (standardPackages pkgs)
