@@ -141,10 +141,6 @@ let
       poetryEnv)
   ];
 
-  pythonPackages = pkgs: with pkgs; [
-    (if pyenv == true then pyenv)
-  ];
-
   targetPkgs = pkgs:
     (standardPackages pkgs)
     ++ optionals enableGraphical (graphicalPackages pkgs)
