@@ -163,10 +163,9 @@ let
     ];
 
   juliaPackages =
-    if juliaEnv == null then
-      pkgs.callPackage ./julia.nix { juliaVersion = juliaVersion; }
-    else
-      juliaEnv;
+    pkgs: with pkgs; [
+      (if juliaEnv == null then callPackage ./julia.nix { juliaVersion = juliaVersion; } else juliaEnv)
+    ];
 
   targetPkgs =
     pkgs:
