@@ -71,7 +71,7 @@ let
       fontconfig
       freetype
       gettext
-      (glfw.override { waylandSupport = true; })
+      (glfw.override { waylandSupport = null; })
       glib
       glib.out
       gnome2.GConf
