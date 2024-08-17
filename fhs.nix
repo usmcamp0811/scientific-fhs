@@ -1,33 +1,14 @@
-{
-  lib,
-  pkgs,
-  enableJulia ? true,
-  juliaVersion ? "1.10.0",
-  juliaEnv ? null,
-  enableConda ? false,
-  enablePython ? true,
-  enablePoetry ? true,
-  enableQuarto ? true,
-  condaInstallationPath ? "~/.conda",
-  condaJlEnv ? "conda_jl",
-  pythonVersion ? "3.8",
-  enableGraphical ? false,
-  enableNVIDIA ? false,
-  enableNode ? false,
-  commandName ? "scientific-fhs",
-  commandScript ? "zsh",
-  texliveScheme ? pkgs.texlive.combined.scheme-minimal,
-  extraOutputsToInstall ? [
-    "man"
-    "dev"
-  ],
-  poetryEnv ? null,
-}:
+{ lib, pkgs, enableJulia ? true, juliaVersion ? "1.10.0", juliaEnv ? null
+, enableConda ? false, enablePython ? true, enablePoetry ? true
+, enableQuarto ? true, condaInstallationPath ? "~/.conda"
+, condaJlEnv ? "conda_jl", pythonVersion ? "3.8", enableGraphical ? false
+, enableNVIDIA ? false, enableNode ? false, commandName ? "scientific-fhs"
+, commandScript ? "zsh", texliveScheme ? pkgs.texlive.combined.scheme-minimal
+, extraOutputsToInstall ? [ "man" "dev" ], poetryEnv ? null, }:
 
 with lib;
 let
-  standardPackages =
-    pkgs:
+  standardPackages = pkgs:
     with pkgs;
     [
       autoconf
@@ -53,11 +34,10 @@ let
       bubblewrap
       poetry
       pyenv
-    ]
-    ++ lib.optional enableNode pkgs.nodejs;
+    ] ++ lib.optional enableNode pkgs.nodejs;
 
-  graphicalPackages =
-    pkgs: with pkgs; [
+  graphicalPackages = pkgs:
+    with pkgs; [
       alsaLib
       at-spi2-atk
       at-spi2-core
@@ -71,8 +51,8 @@ let
       fontconfig
       freetype
       gettext
-      glfw
-      # (glfw.override { waylandSupport = true; })
+      # glfw
+      (glfw.override { waylandSupport = true; })
       glib
       glib.out
       gnome2.GConf
@@ -123,53 +103,52 @@ let
       zlib
     ];
 
-  nvidiaPackages =
-    pkgs: with pkgs; [
+  nvidiaPackages = pkgs:
+    with pkgs; [
       cudatoolkit_11
       cudnn_cudatoolkit_11
       linuxPackages.nvidia_x11
     ];
 
-  quartoPackages =
-    pkgs:
-    let
-      quarto = pkgs.callPackage ./quarto.nix { rWrapper = null; };
-    in
-    [ quarto ];
+  quartoPackages = pkgs:
+    let quarto = pkgs.callPackage ./quarto.nix { rWrapper = null; };
+    in [ quarto ];
 
-  condaPackages =
-    pkgs: with pkgs; [ (callPackage ./conda.nix { installationPath = condaInstallationPath; }) ];
+  condaPackages = pkgs:
+    with pkgs;
+    [ (callPackage ./conda.nix { installationPath = condaInstallationPath; }) ];
 
-  pythonPackages =
-    pkgs: with pkgs; [
-      (
-        if poetryEnv == null then
-          python3.withPackages (
-            ps: with ps; [
-              mlflow
-              jupyter
-              jupyterlab
-              numpy
-              scipy
-              pandas
-              matplotlib
-              scikit-learn
-              tox
-              pygments
-            ]
-          )
-        else
-          poetryEnv
-      )
+  pythonPackages = pkgs:
+    with pkgs;
+    [
+      (if poetryEnv == null then
+        python3.withPackages (ps:
+          with ps; [
+            mlflow
+            jupyter
+            jupyterlab
+            numpy
+            scipy
+            pandas
+            matplotlib
+            scikit-learn
+            tox
+            pygments
+          ])
+      else
+        poetryEnv)
     ];
 
-  juliaPackages =
-    pkgs: with pkgs; [
-      (if juliaEnv == null then callPackage ./julia.nix { juliaVersion = juliaVersion; } else juliaEnv)
+  juliaPackages = pkgs:
+    with pkgs;
+    [
+      (if juliaEnv == null then
+        callPackage ./julia.nix { juliaVersion = juliaVersion; }
+      else
+        juliaEnv)
     ];
 
-  targetPkgs =
-    pkgs:
+  targetPkgs = pkgs:
     (standardPackages pkgs)
     ++ optionals enableGraphical (graphicalPackages pkgs)
     ++ optionals enableJulia (juliaPackages pkgs)
@@ -205,12 +184,10 @@ let
     export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
   '';
 
-  envvars =
-    std_envvars
-    + optionalString enableGraphical graphical_envvars
+  envvars = std_envvars + optionalString enableGraphical graphical_envvars
     + optionalString enableConda conda_envvars
-    + optionalString (enableConda && enableJulia && enablePoetry) conda_julia_envvars
-    + optionalString enableNVIDIA nvidia_envvars;
+    + optionalString (enableConda && enableJulia && enablePoetry)
+    conda_julia_envvars + optionalString enableNVIDIA nvidia_envvars;
 
   multiPkgs = pkgs: with pkgs; [ zlib ];
 
@@ -218,8 +195,7 @@ let
     conda-install
     conda create -n ${condaJlEnv} python=${pythonVersion}
   '';
-in
-pkgs.buildFHSUserEnv {
+in pkgs.buildFHSUserEnv {
   inherit multiPkgs extraOutputsToInstall;
   targetPkgs = targetPkgs;
   name = commandName; # Name used to start this UserEnv
