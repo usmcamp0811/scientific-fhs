@@ -59,6 +59,7 @@ let
   graphicalPackages =
     pkgs: with pkgs; [
       alsaLib
+      spirv-tools
       at-spi2-atk
       at-spi2-core
       atk
@@ -71,7 +72,7 @@ let
       fontconfig
       freetype
       gettext
-      # glfw
+      glfw
       # (glfw.override { waylandSupport = true; })
       glib
       glib.out
